@@ -23,11 +23,12 @@ button:hover{background:#173f5f}
 table{width:100%;border-collapse:collapse;margin-top:12px}
 td,th{border:1px solid #d6e6ef;padding:10px}
 th{background:#0f2d44;color:white}
-.blank{display:inline-block;margin:4px}
-.small-input{max-width:180px}
+.small-input{max-width:110px}
+.template-line{font-size:20px;background:#f6f9fb;border:1px solid #d6e6ef;padding:14px;border-radius:8px;margin:10px 0}
 @media print{button{display:none}body{background:white}}
 </style>
 </head>
+
 <body>
 <div class="container">
 
@@ -94,7 +95,7 @@ x = ±6<br><br>
 <option value="signError">The student made a sign error while moving terms.</option>
 </select>
 <br>
-<input id="mistakeCorrectAnswer" placeholder="Enter the correct final solution">
+<p>x = <input class="small-input" id="mistakeCorrectAnswer"></p>
 </div>
 
 <div class="card purple">
@@ -152,9 +153,19 @@ b = <input class="small-input" id="qfB"><br>
 c = <input class="small-input" id="qfC">
 <p>Discriminant:</p>
 b<sup>2</sup> - 4ac = <input class="small-input" id="qfDisc">
+
 <p>Final solutions:</p>
-x = <input class="small-input" id="qfSol1"><br>
-x = <input class="small-input" id="qfSol2">
+<div class="template-line">
+x =
+<input class="small-input" id="qfReal">
+±
+<input class="small-input" id="qfRadicalCoef">
+√<input class="small-input" id="qfRadicand">
+i
+/
+<input class="small-input" id="qfDenominator">
+</div>
+<p style="font-size:14px;">Enter only the numbers in the boxes.</p>
 </div>
 
 <p style="text-align:center;">
@@ -188,7 +199,6 @@ x = <input class="small-input" id="qfSol2">
 function n(v){
 return String(v).toLowerCase().replace(/\s+/g,"").replace(/−/g,"-").replace(/\*\*/g,"^").replace(/x²/g,"x^2").replace(/\+\-/g,"-").replace(/plusminus/g,"±").replace(/\+\/-/g,"±").replace(/\+-/g,"±");
 }
-function has(v, arr){let s=n(v);return arr.every(x=>s.includes(n(x)));}
 function oneOf(v, arr){let s=n(v);return arr.some(x=>s===n(x));}
 function pair(v1,v2,a,b){return (oneOf(v1,[a])&&oneOf(v2,[b]))||(oneOf(v1,[b])&&oneOf(v2,[a]));}
 function textOK(id){return document.getElementById(id).value.trim().length>=20;}
@@ -206,14 +216,14 @@ if(document.getElementById("strategyChoice").value!=="zpp") corrections.push("Ca
 if(!textOK("strategyExplanation")) corrections.push("Case File 1 — Explanation");
 if(!textOK("correctExplanation")) corrections.push("Case File 2 — Explanation");
 if(document.getElementById("mistakeChoice").value!=="forgotI") corrections.push("Case File 3 — First Mistake");
-if(!oneOf(document.getElementById("mistakeCorrectAnswer").value,["x=±6i","±6i","x=6i,-6i","x=6iandx=-6i"])) corrections.push("Case File 3 — Correct Final Solution");
+if(!oneOf(document.getElementById("mistakeCorrectAnswer").value,["±6i","6i,-6i","6iand-6i"])) corrections.push("Case File 3 — Correct Final Solution");
 
 if(!pair(document.getElementById("zppFactor1").value,document.getElementById("zppFactor2").value,"x-4","x+7")) corrections.push("Problem A — Factors");
 if(!pair(document.getElementById("zppSol1").value,document.getElementById("zppSol2").value,"4","-7")) corrections.push("Problem A — Solutions");
 
 if(!oneOf(document.getElementById("sqrtIso").value,["-49"])) corrections.push("Problem B — Isolate x²");
 if(!oneOf(document.getElementById("sqrtRoot").value,["√-49","sqrt(-49)","7i"])) corrections.push("Problem B — Square Root Step");
-if(!oneOf(document.getElementById("sqrtFinal").value,["±7i","x=±7i","7i,-7i"])) corrections.push("Problem B — Final Solution");
+if(!oneOf(document.getElementById("sqrtFinal").value,["±7i","7i,-7i"])) corrections.push("Problem B — Final Solution");
 
 if(!pair(document.getElementById("fac1").value,document.getElementById("fac2").value,"2x+1","x+3")) corrections.push("Problem C — Factors");
 if(!pair(document.getElementById("facEq1").value,document.getElementById("facEq2").value,"2x+1","x+3")) corrections.push("Problem C — Zero Product Equations");
@@ -232,7 +242,10 @@ if(!oneOf(document.getElementById("qfA").value,["3"])) corrections.push("Problem
 if(!oneOf(document.getElementById("qfB").value,["-2"])) corrections.push("Problem E — b Value");
 if(!oneOf(document.getElementById("qfC").value,["7"])) corrections.push("Problem E — c Value");
 if(!oneOf(document.getElementById("qfDisc").value,["-80"])) corrections.push("Problem E — Discriminant");
-if(!pair(document.getElementById("qfSol1").value,document.getElementById("qfSol2").value,"(1+2√5i)/3","(1-2√5i)/3")) corrections.push("Problem E — Final Solutions");
+if(!oneOf(document.getElementById("qfReal").value,["1"])) corrections.push("Problem E — Real Part");
+if(!oneOf(document.getElementById("qfRadicalCoef").value,["2"])) corrections.push("Problem E — Radical Coefficient");
+if(!oneOf(document.getElementById("qfRadicand").value,["5"])) corrections.push("Problem E — Radicand");
+if(!oneOf(document.getElementById("qfDenominator").value,["3"])) corrections.push("Problem E — Denominator");
 
 if(corrections.length){
 document.getElementById("missionFeedback").style.display="block";
